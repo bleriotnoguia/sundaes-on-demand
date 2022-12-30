@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "../../../test-utils/testing-library-utils";
 import userEvent from "@testing-library/user-event";
 import Options from "../Options";
 
@@ -29,4 +29,34 @@ test("update scoop subtotal when scoops change", async () => {
   await user.type(chocolateInput, "2");
 
   expect(scoopsSubtotal).toHaveTextContent("6.0");
+});
+
+test("update topping subtotal when topping change", async () => {
+  const user = userEvent.setup();
+  render(<Options optionType={"toppings"} />);
+
+  // make sure total starts out at $0.00
+  const toppingSubtotal = screen.getByText("Toppings total: $", {
+    exact: false,
+  });
+  expect(toppingSubtotal).toHaveTextContent("0.00");
+
+  // add cherries and check the subtotal
+  const cherriesCheckbox = await screen.findByRole("checkbox", {
+    name: "Cherries",
+  });
+
+  await user.click(cherriesCheckbox);
+
+  expect(toppingSubtotal).toHaveTextContent("1.50");
+
+  // add hot fudge and check subtotal
+  const hotFudgeCheckbox = screen.getByRole("checkbox", { name: "Hot fudge" });
+  await user.click(hotFudgeCheckbox);
+
+  expect(toppingSubtotal).toHaveTextContent("3.00");
+
+  // remove hot fudge and check subtotal
+  await user.click(hotFudgeCheckbox);
+  expect(toppingSubtotal).toHaveTextContent("1.50");
 });
