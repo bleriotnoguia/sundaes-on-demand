@@ -27,15 +27,18 @@ export default function OrderConfirmation({ setOrderPhase }) {
     // send back to order page
     setOrderPhase("inProgress");
   }
-
-  return (
-    <div style={{ textAlign: "center" }}>
-      <h1>Thank You!</h1>
-      <p>Your order number is {orderNumber}</p>
-      <p style={{ fontSize: "25%" }}>
-        as per our terms and conditions, nothing will happen now
-      </p>
-      <Button onClick={handleClick}>Create new order</Button>
-    </div>
-  );
+  if (orderNumber) {
+    return (
+      <div style={{ textAlign: "center" }}>
+        <h1>Thank You!</h1>
+        <p>Your order number is {orderNumber}</p>
+        <p style={{ fontSize: "25%" }}>
+          as per our terms and conditions, nothing will happen now
+        </p>
+        <Button onClick={handleClick}>Create new order</Button>
+      </div>
+    );
+  } else {
+    return <div>Loading</div>;
+  }
 }
